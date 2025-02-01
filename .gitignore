@@ -21,4 +21,4 @@ logs/
 
 # Ignore IDE & Editor Config Files
 .idea/
-.vscode/
+.vscode/.venv/
