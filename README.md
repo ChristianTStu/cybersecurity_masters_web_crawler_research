@@ -39,15 +39,20 @@ This project is divided into **4 progressive phases**:
 - Crawls and extracts **static web content** from simple pages.
 - Stores structured data in **JSON/CSV format**.
 
-### **2️⃣ JavaScript-Based Crawler (Playwright & Selenium)**
-- Handles **JavaScript-heavy websites** (AJAX, dynamic loading).
-- Simulates **user interactions** in a real browser.
+### **2️⃣ Intermediate Crawler (HTTPx & SelectoLax)**
+- Sends raw HTTP requests to fetch HTML content.
+- Parses static or semi-dynamic HTML (pre-rendered or server-rendered).
+- Uses advanced headers and request tuning to mimic browser traffic.
+- Fails gracefully on JavaScript-heavy or anti-bot protected sites.
+- Provides lightweight, fast scraping for pages not requiring full browser rendering.
 
 ### **3️⃣ API Endpoint Detection (Passive Reconnaissance)**
 - Extracts **hidden API endpoints** from JavaScript files.
 - Helps analyze **API security vulnerabilities**.
 
 ### **4️⃣ Advanced Crawler (Playwright & Puppeteer)**
+- Handles **JavaScript-heavy websites** (AJAX, dynamic loading).
+- Simulates **user interactions** in a real browser.
 - Implements **browser fingerprint spoofing** & **headless detection bypass**.
 - Uses **proxy rotation & CAPTCHA solving** for anti-bot evasion.
 
