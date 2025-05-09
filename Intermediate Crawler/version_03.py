@@ -1,29 +1,37 @@
 """
-Summary:
---------
-This script scrapes product names and sale prices from the REI backpacking packs category page.
-It uses the httpx library to send an HTTP GET request with detailed browser-mimicking headers,
-and Selectolax to parse the returned HTML.
+intermediate_playwright_crawler.py
+----------------------------------
+This script scrapes product names and prices from the REI backpacking packs category page
+and saves the results to a JSON file for later analysis or inclusion in your thesis.
 
-The script identifies individual product blocks using CSS selectors (located via Chrome DevTools),
-extracts product names and sale prices, and cleans up the price strings by removing 
-any additional discount or comparison text.
+Key steps:
+1. Define the target URL and HTTP headers to mimic a real browser.
+2. Send an HTTP GET request using httpx with a timeout to avoid hanging.
+3. Parse the returned HTML using Selectolax for fast, memory-efficient parsing.
+4. Locate each product container via CSS selectors (inspected in Chrome DevTools).
+5. Extract the product name, full price, and sale price for each item.
+6. Store all extracted items in a list of dicts.
+7. Write the list to a JSON file with indentation for readability.
+8. Print a summary of how many items were scraped and where the file was saved.
 
-Note:
-------
-Due to REI's anti-bot protections, repeated or fast scraping may lead to temporary IP blocks.
-It’s recommended to run this script cautiously with delays or consider upgrading to 
-a headless browser solution like Playwright for more robust scraping.
+Note on anti-bot protections:
+REI may throttle or block rapid or repeated requests. In a production consider adding randomized delays, proxy rotation, or switching to
+a headless browser approach (e.g., Playwright) for greater resilience. Thus will be explored in the Advanced crawler.
 """
 
 import httpx
 from selectolax.parser import HTMLParser
 import re  # Needed for regex-based price cleanup
+import json
 
-# Define the target URL for backpacking packs
+# 1) Target URL: the REI page listing backpacking packs
 url = "https://www.rei.com/c/backpacking-packs"
 
-# Define headers to mimic a real browser request and avoid basic bot detection
+# 2) HTTP headers: mimic a real desktop browser to reduce basic bot detection
+#    - User-Agent: identifies browser type/version
+#    - Accept*: what content types we can handle
+#    - Accept-Encoding: allows gzip/br compression
+#    - Connection: keep-alive to reuse TCP connection where possible
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -44,31 +52,31 @@ def extract_text(html, sel):
     except AttributeError:
         return None  # Return None if selector is not found
 
-# Send the HTTP GET request with a 30-second timeout
+# 3) Send the GET request; set a 30-second timeout to fail fast if the page is slow
 resp = httpx.get(url, headers=headers, timeout=30.0)
 
-# Parse the raw HTML response using Selectolax
+# 4) Parse the raw HTML response with Selectolax for fast DOM traversal
 html = HTMLParser(resp.text)
 
-# Identify product containers on the page using the known CSS class
+# 5) Identify each product container by its unique CSS class (inspected via DevTools)
 # (found using Chrome DevTools to inspect the REI site)
 products = html.css("li.VcGDfKKy_dvNbxUqm29K")
 
-# Loop over each product block and extract relevant details
+all_items = []
+# 6) Loop through each product element and pull out the fields we care about
 for product in products:
-    raw_price = extract_text(product, "span[data-ui=sale]")
-
-    if raw_price:
-        # Clean up the price string by removing trailing discount or comparison text
-        clean_price = re.split(r'Save|compared', raw_price)[0].strip()
-    else:
-        clean_price = None
-
-    # Build the item dictionary with product name and cleaned price
     item = {
         "name": extract_text(product, ".Xpx0MUGhB7jSm5UvK2EY"),
-        "price": clean_price,
+        "full_price": extract_text(product, "span[data-ui=full-price]"),
+        "sale_price": extract_text(product, "span[data-ui=sale-price]")
     }
 
-    # Print the extracted product details
-    print(item)
+    all_items.append(item)
+
+# 7) Write the results to a JSON file for easy import into other tools or inclusion
+output_file = "intermediate_crawler_products.json"
+with open(output_file, "w", encoding="utf-8") as f:
+    json.dump(all_items, f, ensure_ascii=False, indent=2)
+
+# 8) Print a confirmation so you know how many items were scraped and where to find them
+print(f"✅ Scraped {len(all_items)} products → {output_file}")
