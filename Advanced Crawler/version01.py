@@ -1,79 +1,46 @@
 """
-Version 1: Basic HTTPx + Selectolax Scraper
-------------------------------------------
-PURPOSE:
-  • Demonstrate a naïve, “out-of-the-box” scraping approach against Napaonline
-  • No browser emulation, stealth, proxies, or CAPTCHA handling—expected to be blocked
+Summary:
+--------
+This script uses Playwright's APIRequestContext to fetch JSON data for a product from the Adidas API.
+It avoids HTTP/2 protocol errors by using direct request context instead of navigating a browser page.
 
-USAGE:
-  Run this script as-is. You should see an empty list (`[]`) or a “403 Forbidden Error,”
-  illustrating that simple HTTP requests cannot bypass Napaonline’s protections,
-  necessitating a more advanced approach.
+Version:
+--------
+Advanced Crawler Version 01 for Master's Thesis demonstration.
+
+Note:
+-----
+- This is the introductory version focusing on simple API retrieval without browser automation.
+- Later versions will build on this by adding proxy support and possibly CAPTCHA solving.
 """
 
+from playwright.sync_api import sync_playwright
+import json
 
-import httpx
-from selectolax.parser import HTMLParser
-import re
+def fetch_adidas_product():
+    # Target API endpoint for product JI0861 on the US site
+    url = "https://www.adidas.com/plp-app/api/product/JI0861?sitePath=us"
 
-# ─── Configuration ─────────────────────────────────────────────────────────────
+    # Initialize Playwright for synchronous API requests
+    with sync_playwright() as p:
+        # Create an isolated request context for API calls
+        request_context = p.request.new_context()
 
-# 1) Target category page URL
-CATEGORY_URL  = (
-    "https://www.napaonline.com/en/shop/"
-    "replacement-parts/batteries/automotive-batteries/car-batteries/315705233"
-)
+        # Send a GET request to the API endpoint
+        response = request_context.get(url)
+        
+        # Check if the request was successful (HTTP 200 OK)
+        if response.status != 200:
+            print(f"❌ Failed to fetch data (status {response.status}).")
+        else:
+            # Parse the response body as JSON
+            data = response.json()
+            # Pretty-print the JSON data with indentation for readability
+            print(json.dumps(data, indent=2))
 
-# 2) CSS selector for each product tile (container)
-CONTAINER_SEL = "geo-product-list-item"
-
-# 3) Within each tile, the selector for the product title/details
-TITLE_SEL     = "div.geo-pod-detail"
-
-# 4) Within each tile, the selector for the displayed price
-PRICE_SEL     = "div.geo-plp-product_base_price"
-
-# ─── Helper Function ────────────────────────────────────────────────────────────
-
-def extract_text(node, selector):
-    """
-    Safely extract text from the first matching CSS selector under `node`.
-    Returns None if the selector isn’t found or in case of any error.
-    """
-    try:
-        return node.css_first(selector).text().strip()
-    except:
-        return None
-
-# ─── Main Scrape Logic ──────────────────────────────────────────────────────────
-
-def run_basic():
-    # 1. Send a plain HTTP GET request
-    resp = httpx.get(CATEGORY_URL, timeout=30.0)
-    resp.raise_for_status()
-
-    # 2. Parse the response HTML with Selectolax
-    tree = HTMLParser(resp.text)
-
-    # 3. Find all product containers
-    cards = tree.css(CONTAINER_SEL)
-
-    # 4. Extract name & price from each container
-    results = []
-    for card in cards:
-        name      = extract_text(card, TITLE_SEL)
-        raw_price = extract_text(card, PRICE_SEL)
-        price     = re.sub(r"[^\d\.]", "", raw_price) if raw_price else None
-
-        results.append({
-            "name":  name,
-            "price": price
-        })
-
-    # 5. Print what we found (likely an empty list)
-    print(results)
-
-# ─── Entry Point ────────────────────────────────────────────────────────────────
+        # Dispose of the request context to free up resources
+        request_context.dispose()
 
 if __name__ == "__main__":
-    run_basic()
+    # Entry point: execute the fetch function
+    fetch_adidas_product()
