@@ -49,9 +49,9 @@ if __name__ == '__main__':
     # Configure and run the Scrapy spider, outputting to JSON
     process = CrawlerProcess({
         'FEED_FORMAT': 'json',
-        'FEED_URI': 'simple_countries.json',
+        'FEED_URI': 'basic_crawler_products.json',
         'LOG_LEVEL': 'ERROR'
     })
     process.crawl(SimpleSpider)
     process.start()  # blocking call
-    print('✅ Data written to simple_countries.json')
+    print('✅ Data written to basic_crawler_products.json')
