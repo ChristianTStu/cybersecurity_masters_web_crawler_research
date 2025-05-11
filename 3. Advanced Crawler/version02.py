@@ -1,35 +1,40 @@
 """
-Master's Thesis – Advanced Crawler Version 2 (Batch Mode)
+Master's Thesis - Web Scraping Implementation: Advanced Crawler - Version 2 (Playwright API Batch)
 
-This script fetches JSON product details in bulk from the Adidas API.
-It uses Playwright's APIRequestContext for direct HTTP calls, avoiding browser navigation
-and mitigating HTTP/2 protocol issues.
+This script demonstrates a sophisticated approach to web scraping using Playwright's
+APIRequestContext to process multiple backend API endpoints in a batch operation.
+This version builds on Version 1 by implementing bulk data collection for 
+greater efficiency and comprehensive product coverage.
 
-Workflow:
-1. Define a static list of Adidas product codes (e.g., 'IE3530').
-2. Construct the product-detail API URL for each code and fetch its JSON payload.
-3. Collect all product JSON objects into a single Python list.
-4. Print the aggregated list to the terminal.
+Technical overview:
+- Uses Playwright: A powerful browser automation library
+- Uses APIRequestContext: Direct API access without browser rendering
+- Batch processing: Retrieves data for multiple products sequentially
+- Connection reuse: Maintains a single request context for efficiency
+- Real-time status reporting: Provides feedback during execution
+- Error handling: Gracefully manages failed requests without terminating
+- JSON aggregation: Collects structured data into a unified result set
 
-Technical Implementation Details:
---------------------------------
-- Uses a single APIRequestContext to maintain connection efficiency
-- Implements sequential fetching with real-time status reporting
-- Handles HTTP response status codes to identify successful vs. failed requests
-- Preserves the complete API response structure for maximum data availability
+Advantages of batch API approach:
+- Scales efficiently to handle multiple products
+- Reuses connection for improved performance
+- Preserves complete API response structure
+- Provides real-time feedback on operation progress
+- Maintains all benefits of direct API access from Version 1
+- More efficient than individual script executions
+- Fails gracefully when individual requests encounter errors
 
-Design Principles:
------------------
-- Separation of concerns: Data collection separated from data processing
-- Fail gracefully: Continue processing despite individual request failures
-- Transparency: Real-time feedback on request status
-- Efficiency: Direct API access without browser overhead
+Limitations:
+- Sequential processing may be slower than parallel requests
+- No proxy implementation for IP rotation
+- Vulnerable to rate limiting with larger product lists
+- No retry mechanism for failed requests
+- All requests use the same IP address, increasing detection risk
+- Limited to a static, predefined list of product codes
 
-Future Enhancements:
--------------------
-- Add proxy rotation for distributed requests.
-- Integrate CAPTCHA solving when anti-bot measures are encountered.
-- Introduce retries with exponential backoff for transient failures.
+Target URL: https://www.adidas.com/plp-app/api/product/{code}?sitePath=us
+This endpoint pattern is used with multiple product codes to retrieve
+comprehensive product information in JSON format for batch processing.
 """
 
 import json  # For JSON serialization/deserialization

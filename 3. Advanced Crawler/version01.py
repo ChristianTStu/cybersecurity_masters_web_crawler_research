@@ -1,32 +1,38 @@
 """
-Summary:
---------
-This script uses Playwright's APIRequestContext to fetch JSON data for a product from the Adidas API.
-It avoids HTTP/2 protocol errors by using direct request context instead of navigating a browser page.
+Master's Thesis - Web Scraping Implementation: Advanced Crawler - Version 1 (Playwright API Direct)
 
-Version:
---------
-Advanced Crawler Version 01 for Master's Thesis demonstration.
+This script demonstrates a sophisticated approach to web scraping using Playwright's
+APIRequestContext to directly access backend API endpoints rather than scraping HTML.
+This version represents a modern implementation targeting structured data sources
+with minimal overhead and maximum efficiency.
 
-Note:
------
-- This is the introductory version focusing on simple API retrieval without browser automation.
-- Later versions will build on this by adding proxy support and possibly CAPTCHA solving.
+Technical overview:
+- Uses Playwright: A powerful browser automation library
+- Uses APIRequestContext: Direct API access without browser rendering
+- Single endpoint access: Retrieves data for one specific product
+- JSON processing: Works with structured data instead of HTML
+- Resource management: Properly initializes and disposes of contexts
 
-Technical Architecture:
----------------------
-1. Setup Playwright synchronous context
-2. Create API request context
-3. Send GET request to Adidas product API
-4. Process and display JSON response
-5. Clean up resources
+Advantages of Playwright API approach:
+- Bypasses frontend rendering completely
+- Avoids complex HTML parsing and CSS selectors
+- Receives data in structured JSON format
+- Lower resource usage than full browser automation
+- Avoids bot detection mechanisms tied to browser fingerprinting
+- More stable than scraping dynamically rendered content
+- Direct access to the same data sources used by the website
 
-Benefits:
---------
-- Lighter weight than full browser automation
-- Avoids HTTP/2 protocol complexities
-- Direct JSON access without HTML parsing
-- More efficient for batch processing
+Limitations:
+- Requires discovering and understanding API endpoints
+- API structure may change without notice
+- Single product focus lacks scalability
+- No proxy implementation for IP rotation
+- Potentially vulnerable to API rate limiting
+- Requires manual inspection to discover API patterns
+
+Target URL: https://www.adidas.com/plp-app/api/product/JI0861?sitePath=us
+This endpoint provides comprehensive product information in JSON format,
+demonstrating how to access backend APIs directly instead of scraping HTML.
 """
 
 from playwright.sync_api import sync_playwright  # Import the synchronous Playwright API

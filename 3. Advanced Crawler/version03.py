@@ -1,42 +1,43 @@
 """
-Master's Thesis – Advanced Crawler Version 3 (Batch Mode + Field Filtering + Proxy Support)
+Master's Thesis - Web Scraping Implementation: Advanced Crawler - Version 3 (Playwright API + Proxy + Field Filtering)
 
-This batch script fetches selected product details from the Adidas API,
-avoiding HTTP/2 protocol issues, ignoring HTTPS certificate errors,
-using a proxy server, and minimizing returned fields for concise output.
+This script demonstrates a production-grade approach to web scraping using Playwright's
+APIRequestContext with proxy support, SSL certificate handling, and selective data extraction.
+This version represents a complete implementation that addresses all common challenges
+in enterprise-grade web scraping operations.
 
-Architecture Overview:
---------------------
-1. Environment Configuration: Loads proxy credentials from .env file
-2. Proxy Setup: Parses and configures proxy settings with authentication
-3. Product Fetching: Uses Playwright's request context with proxy routing
-4. Data Processing: Extracts only essential fields from the API response
-5. Output Generation: Writes processed records to a structured JSON file
+Technical overview:
+- Uses Playwright: A powerful browser automation library
+- Uses APIRequestContext: Direct API access without browser rendering
+- Proxy integration: Routes requests through authenticated proxies
+- Environment configuration: Securely loads credentials from .env file
+- SSL certificate bypass: Ignores HTTPS errors common with proxies
+- Field filtering: Extracts only essential data fields
+- Realistic headers: Mimics genuine browser requests
+- Robust error handling: Ensures completion despite individual failures
+- Structured output: Saves consistent JSON format for further processing
 
-Technical Advantages:
--------------------
-- SSL Certificate Bypass: Prevents connection issues with potentially untrusted proxies
-- Minimized Payload: Reduces memory usage and improves processing speed
-- Browser Fingerprinting: Uses realistic headers to avoid detection
-- Error Resilience: Continues processing despite individual request failures
-- Proxy Integration: Enables distributed access patterns to avoid rate limiting
+Advantages of proxy-enabled approach:
+- Distributes requests across different IP addresses
+- Bypasses rate limiting and IP-based blocks
+- Minimizes payload size through selective field extraction
+- Improves resilience against anti-bot detection systems
+- Maintains structured output format for downstream processing
+- Handles SSL certificate issues common with proxy services
+- Secures credentials through environment variable configuration
+- Reduces memory footprint through field filtering
 
-Workflow:
---------
-1. Load proxy credentials from .env file.
-2. Define static list of Adidas product codes to fetch.
-3. For each code:
-   a. Build product-detail API URL.
-   b. Send GET request through proxy with HTTPS errors ignored.
-   c. Extract only title, original price, sale price, on-sale flag, and in-stock flag.
-4. Aggregate minimal records into a Python list.
-5. Write results to an output JSON file.
+Limitations:
+- Requires proxy service subscription or setup
+- More complex configuration than previous versions
+- Potential latency increases due to proxy routing
+- Must manage proxy credentials securely
+- Additional dependencies (dotenv) for configuration
+- Increased operational complexity and maintenance
 
-Enhancements:
-------------
-- Ignoring expired SSL certificates to prevent fetch errors.
-- Field filtering reduces payload size and focuses on key attributes.
-- Proxy support with proper authentication and SSL handling.
+Target URL: https://www.adidas.com/plp-app/api/product/{code}?sitePath=us
+This endpoint pattern is used with multiple product codes to retrieve and filter
+specific product information while protecting the crawler with proxy rotation.
 """
 
 import json  # For working with JSON data formats

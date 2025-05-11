@@ -25,6 +25,7 @@ Limitations:
 - No session persistence
 - No connection pooling
 - Limited error handling capabilities
+- More verbose code compared to higher-level libraries
 
 Target URL: https://www.scrapethissite.com/pages/simple/
 This website contains information about countries which will be extracted
@@ -86,7 +87,7 @@ def crawl_version1() -> None:
             # This is the most basic form of handling the scraped content,
             # without any parsing or data extraction.
             # In a more advanced implementation, this HTML would be parsed
-            # to extract specific information.
+            # to extract specific information about countries.
             print(html)
             
     except Exception as e:
