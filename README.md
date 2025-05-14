@@ -77,17 +77,12 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. Install the required dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-4. For the Advanced Crawler (Phase 3), you'll need to install browser dependencies for Playwright:
+3. For the Advanced Crawler (Phase 3), you'll need to install browser dependencies for Playwright:
 ```bash
 playwright install
 ```
 
-5. Create a `.env` file from the example (for proxy support):
+4. Create a `.env` file from the example (for proxy support):
 ```bash
 cp .env.example .env
 ```
