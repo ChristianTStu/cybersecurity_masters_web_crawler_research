@@ -7,37 +7,24 @@ This project is part of a **Master’s Report in Cybersecurity & Information Ope
 
 ```
 web_crawler_project/
-│── crawlers/              # Web crawler implementations
-│   ├── basic/             # Phase 1: Basic web crawling techniques
-│   │   ├── urllib_crawler.py         # Version 1: urllib implementation
-│   │   ├── requests_crawler.py       # Version 2: requests implementation
-│   │   └── scrapy_bs_crawler.py      # Version 3: Scrapy and BeautifulSoup 
-│   │
-│   ├── intermediate/      # Phase 2: Intermediate techniques
-│   │   ├── httpx_basic.py            # Version 1: Basic httpx approach
-│   │   ├── httpx_enhanced.py         # Version 2: Enhanced headers approach
-│   │   └── httpx_extraction.py       # Version 3: Data extraction and output
-│   │
-│   └── advanced/         # Phase 3: Advanced techniques
-│       ├── playwright_single.py      # Version 1: Direct API access
-│       ├── playwright_batch.py       # Version 2: Batch processing
-│       └── playwright_proxy.py       # Version 3: Proxy and field filtering
-│
-│── utils/                # Helper functions
-│   ├── header_generator.py           # Browser-like header generation
-│   └── proxy_manager.py              # Proxy rotation utilities
-│
-│── results/              # Scraped data output
+├── 1. Basic Crawler/            # Phase 1 scripts
+│   ├── version01.py             # urllib implementation
+│   ├── version02.py             # requests implementation
+│   └── version03.py             # Scrapy + BeautifulSoup
+├── 2. Intermediate Crawler/    # Phase 2 scripts
+│   ├── version_01.py            # httpx baseline
+│   ├── version_02.py            # enhanced headers
+│   └── version_03.py            # Selectolax extraction
+├── 3. Advanced Crawler/        # Phase 3 scripts
+│   ├── version01.py             # Playwright single product
+│   ├── version02.py             # Playwright batch processing
+│   └── version03.py             # Playwright with proxy/filtering
+├── 4. Ouputs/                  # Scraped data output
 │   ├── basic_crawler_products.json
 │   ├── intermediate_crawler_products.json
 │   └── advanced_crawler_products.json
-│
-│── logs/                 # Logs for debugging
-│
-│── .env.example          # Example environment variables
-│── requirements.txt      # Dependencies list
-│── main.py               # CLI tool entry point
-│── README.md             # This file
+├── LICENSE
+└── README.md
 ```
 
 ## Features
@@ -82,9 +69,9 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 playwright install
 ```
 
-4. Create a `.env` file from the example (for proxy support):
+4. (Optional) Create a `.env` file with proxy settings for the advanced crawler:
 ```bash
-cp .env.example .env
+echo "PROXIES=https://username:password@host:port" > .env
 ```
 
 ## Usage
@@ -93,39 +80,39 @@ cp .env.example .env
 
 ```bash
 # Run the urllib implementation
-python -m crawlers.basic.urllib_crawler
+python "1. Basic Crawler/version01.py"
 
 # Run the requests implementation
-python -m crawlers.basic.requests_crawler
+python "1. Basic Crawler/version02.py"
 
 # Run the Scrapy and BeautifulSoup implementation
-python -m crawlers.basic.scrapy_bs_crawler
+python "1. Basic Crawler/version03.py"
 ```
 
 ### Intermediate Crawler
 
 ```bash
 # Run the basic httpx implementation
-python -m crawlers.intermediate.httpx_basic
+python "2. Intermediate Crawler/version_01.py"
 
 # Run the enhanced headers implementation
-python -m crawlers.intermediate.httpx_enhanced
+python "2. Intermediate Crawler/version_02.py"
 
 # Run the data extraction implementation
-python -m crawlers.intermediate.httpx_extraction
+python "2. Intermediate Crawler/version_03.py"
 ```
 
 ### Advanced Crawler
 
 ```bash
 # Run the single product API implementation
-python -m crawlers.advanced.playwright_single
+python "3. Advanced Crawler/version01.py"
 
 # Run the batch processing implementation
-python -m crawlers.advanced.playwright_batch
+python "3. Advanced Crawler/version02.py"
 
 # Run the proxy rotation implementation
-python -m crawlers.advanced.playwright_proxy
+python "3. Advanced Crawler/version03.py"
 ```
 
 ## Ethical Considerations
